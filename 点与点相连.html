@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+
+<style type="text/css">
+	* {
+		margin: 0;
+		padding: 0;
+	}
+	body {
+		overflow: hidden;
+	}
+	
+	canvas {
+		background: #000;
+	}
+
+	#canvas {
+		width: 100%;
+		height: 100%;
+	}
+</style>
+<body>
+	<canvas id="canvas"></canvas>
+	
+	<script type="text/javascript">
+		let width = window.innerWidth;
+		let height = window.innerHeight; 
+		window.onload = function(){
+			var c=document.getElementById("canvas");
+			var cxt = c.getContext("2d");
+			c.width = width;
+			c.height = height;
+
+			var dots = {
+				num:350,
+				distance:50,
+				array:[]
+			};
+
+			var mousePosition  = {
+				x:width/2,
+				y:height/2
+			};
+
+			function Dot() {
+				this.x = Math.random()*width;
+				this.y = Math.random()*height;
+				this.vx = -.5 + Math.random();
+				this.vy = -.5 + Math.random();
+				this.radius = Math.random()*2;
+				this.color = 'hsl('+Math.random()*360+',100%,50%)';
+			}
+
+			Dot.prototype.draw = function(){
+				cxt.beginPath();
+				cxt.fillStyle = this.color;
+				cxt.arc(this.x,this.y,this.radius,0,2*Math.PI,false);
+				cxt.fill();
+				console.log(this);
+			}
+
+			function createDots() {
+				for (var i = 0;i <= dots.num; i++) {
+					let dot = new Dot;
+					dots.array.push(dot);
+				}
+			}
+
+			function moveDots(){
+				for (var i = 0; i < dots.num; i++) {
+
+					if(dots.array[i].x <= 0 || dots.array[i].x >= canvas.width){
+						dots.array[i].vx = -dots.array[i].vx;
+					}
+					if(dots.array[i].y <= 0 || dots.array[i].y >= canvas.height){
+						dots.array[i].vy = -dots.array[i].vy;
+					}
+					dots.array[i].x += dots.array[i].vx;
+					dots.array[i].y += dots.array[i].vy;
+				};
+			}
+
+			function drawDots(){
+				for (var i = 0; i < dots.num; i++) {
+					dots.array[i].draw()
+				};
+			}
+
+			function connectDots(){//距离检测，距离小于50并且在鼠标方圆100内绘制线
+				for (var i = 0; i < dots.num; i++) {
+					for (var j = 1; j < dots.num; j++) {
+						if((Math.abs(dots.array[i].x-dots.array[j].x) <= dots.distance) && (Math.abs(dots.array[i].y-dots.array[j].y) <= dots.distance)){
+
+							if((Math.abs(dots.array[i].x-mousePosition.x) <= 100) && (Math.abs(dots.array[i].y-mousePosition.y) <= 100)){
+								cxt.beginPath();
+								cxt.strokeStyle = dots.array[i].color;
+								cxt.moveTo(dots.array[i].x,dots.array[i].y);
+								cxt.lineTo(dots.array[j].x,dots.array[j].y);
+								cxt.stroke();
+								cxt.closePath();
+							}
+						}
+					};
+				};
+			}
+
+			canvas.addEventListener('mousemove',function(e){
+				mousePosition.x = e.pageX;
+		    	mousePosition.y = e.pageY;
+			})
+			
+			canvas.addEventListener('mouseleave',function(e){
+				mousePosition.x = canvas.width/2;
+		    	mousePosition.y = canvas.height/2;
+			})
+
+			function animateDots(){
+				cxt.clearRect(0, 0,width,height);
+			    moveDots();
+			    connectDots();
+			    drawDots();
+		    	requestAnimationFrame(animateDots);	
+			}
+
+			createDots();
+			requestAnimationFrame(animateDots);	
+		}
+	</script>
+</body>
+</html>
