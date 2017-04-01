@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<style type="text/css">
+		.font {
+			font-family: myIndex,'Lato', sans-serif;
+			font-size: 55px;
+			line-height: 40px;
+			color: black;
+			text-align: center;
+		}
+
+		.font:after {
+			margin-left:7px;
+			content:'|';
+			color: #16a085;
+			animation-name: opacity;
+     		animation-duration: 2s;
+      		animation-iteration-count: infinite;
+		}
+
+		@keyframes opacity {
+			0%, 100% {opacity:0;}
+  			50% {opacity:1;}
+		}
+
+		@font-face {
+			font-family: myIndex;
+			src:url("font/LietoMe-TTF.ttf");
+			src:url("font/LietoMe-OTF.otf");
+
+		}
+	</style>
+</head>
+<body>
+	<p class="font" id="show">
+		
+	</p>
+
+	<script type="text/javascript">
+
+		window.onload=function(){
+            showFont("一个兴趣使然的。。。=。=",true);
+        }
+
+
+        function showFont(msg,flag) {
+        	var story = msg;
+            var s = document.getElementById('show');
+            var i = 0;
+            timer=setInterval(function(){
+                s.innerHTML=story.substring(0,i);
+                i++;
+                if(s.innerHTML==story){
+                    clearInterval(timer);
+                    if (flag) {
+                    	setTimeout(hideFont,"3000");
+                    }
+                }
+            },200);
+        }
+
+        function hideFont() {
+        	var s = document.getElementById('show');
+        	var i = 0;
+        	timer = setInterval(function(){
+        		s.innerHTML = s.innerHTML.substring(0,s.innerHTML.length-i);
+        		i++;
+        		if (s.innerHTML == ""){
+        			clearInterval(timer);
+        			showFont("Hello World",false);
+        		}
+        	},100);
+        }
+
+	</script>
+</body>
+</html>
