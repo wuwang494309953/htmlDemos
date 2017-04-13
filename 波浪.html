@@ -23,39 +23,45 @@
 			var ctx = c.getContext("2d");
 			c.width = width;
 			c.height = height;
+
+			function water(fa,waterSize,waterHeight) {
+				this.width = width;
+				this.height = height;
+				this.fa = fa;
+				this.waterSize = waterSize;
+				this.waterHeight = waterHeight;
+				this.color = 'red';
+
+			}
+
+			water.prototype.draw = function() {
+				ctx.beginPath();
+				ctx.moveTo(0,this.height);
+				for (var x = 0; x < this.width; x++) {
+					let y = Math.sin(x/this.width*Math.PI+this.fa/this.width*Math.PI)*this.waterSize+this.waterHeight;
+					ctx.lineTo(x,y);
+				}
+				ctx.lineTo(this.width,this.height);
+				ctx.fillStyle=this.color;
+				ctx.fill();
+				ctx.stroke();
+			}
+
 			var fa=0;
+
 			function animateWater() {
 				ctx.clearRect(0,0,width,height);
-				ctx.beginPath();
-				ctx.moveTo(0,height);
+				// ctx.beginPath();
+				// ctx.moveTo(0,height);
 				fa += 10;
 				if(fa > width*2) {
 					fa = 0;
 				}
+				let water1 = new water(fa,100,300);
+				water1.draw();
 
-				var x = 0;
-				var y = 100;
-				for (x; x < width; x++) {
-					y = Math.sin(x/width*Math.PI+fa/width*Math.PI)*100+100;
-					ctx.lineTo(x,y);
-				}
-				ctx.lineTo(width,height);
-				ctx.fillStyle="green";
-				ctx.fill();
-				ctx.stroke();
-
-				ctx.beginPath();
-				ctx.moveTo(0,height);
-
-				for (var x1=0; x1 < width; x1++) {
-					y = Math.sin(x1/width*Math.PI+fa/width*Math.PI+Math.PI)*100+100;
-					ctx.lineTo(x1,y);
-				}
-				ctx.lineTo(width,height);
-				ctx.fillStyle="red";
-				ctx.fill();
-				ctx.stroke();
-
+				let water2 = new water(fa+width,100,200);
+				water2.draw();
 
 				requestAnimationFrame(animateWater);
 			}
