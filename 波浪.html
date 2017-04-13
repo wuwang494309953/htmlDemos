@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<style type="text/css">
+	* {
+		margin: 0;
+		padding: 0;
+	}
+	body {
+		overflow: hidden;
+	}
+	</style>
+</head>
+<body>
+	<canvas id="canvas"></canvas>
+	<script type="text/javascript">
+		let width = window.innerWidth;
+		let height = window.innerHeight; 
+		window.onload = function(){
+			var c=document.getElementById("canvas");
+			var ctx = c.getContext("2d");
+			c.width = width;
+			c.height = height;
+			var fa=0;
+			function animateWater() {
+				ctx.clearRect(0,0,width,height);
+				ctx.beginPath();
+				ctx.moveTo(0,height);
+				fa += 10;
+				if(fa > width*2) {
+					fa = 0;
+				}
+
+				var x = 0;
+				var y = 100;
+				for (x; x < width; x++) {
+					y = Math.sin(x/width*Math.PI+fa/width*Math.PI)*100+100;
+					ctx.lineTo(x,y);
+				}
+				ctx.lineTo(width,height);
+				ctx.fillStyle="green";
+				ctx.fill();
+				ctx.stroke();
+
+				ctx.beginPath();
+				ctx.moveTo(0,height);
+
+				for (var x1=0; x1 < width; x1++) {
+					y = Math.sin(x1/width*Math.PI+fa/width*Math.PI+Math.PI)*100+100;
+					ctx.lineTo(x1,y);
+				}
+				ctx.lineTo(width,height);
+				ctx.fillStyle="red";
+				ctx.fill();
+				ctx.stroke();
+
+
+				requestAnimationFrame(animateWater);
+			}
+			requestAnimationFrame(animateWater);
+			
+		}
+	</script>
+</body>
+</html>
